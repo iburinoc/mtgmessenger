@@ -1,6 +1,11 @@
+import sys
+import ujson
 from flask import Flask, Response, request
 
+import sender
+
 app = Flask(__name__)
+send = None
 
 @app.route("/hook", methods=['GET', 'POST'])
 def hook():
@@ -15,7 +20,16 @@ def hook_get(args):
 	return args.get('hub.challenge'), 200
 
 def hook_post(args):
-	print args
+	if send:
+		data = ujson.loads(request.data)
+		for item in data['entry']:
+			if 'messaging' not in item:
+				continue
+			uid = item['messaging']['sender']['id']
+			name = item['messaging']['message']['text']
+
+			send.post(uid, name)
+
 	return '', 200
 
 if __name__ == '__main__':
