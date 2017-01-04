@@ -1,4 +1,5 @@
 import re
+import urllib
 from Queue import Queue, Empty
 from threading import Event
 
