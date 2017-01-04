@@ -40,15 +40,18 @@ class Sender(object):
 				'id': user_id
 			},
 			'message': {
-				'type': 'image',
-				'payload': {
-					'url': 'http://gatherer.wizards.com/Handlers/Image.ashx?' + \
-						urllib.urlencode({'name': name, 'type': 'card'})
+				'attachment': {
+					'type': 'image',
+					'payload': {
+						'url': 'http://gatherer.wizards.com/Handlers/Image.ashx?' + \
+							urllib.urlencode({'name': name, 'type': 'card'})
+					}
 				}
 			}
 		}
 
 		requests.post('https://graph.facebook.com/v2.6/me/messages',
 			data=ujson.dumps(body),
-			args={'ACCESS_TOKEN': self.access_token})
+			params={'access_token': self.access_key},
+			headers={'Content-Type': 'application/json'})
 
