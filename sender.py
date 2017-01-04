@@ -1,6 +1,7 @@
 import re
 import urllib
 import requests
+import ujson
 from Queue import Queue, Empty
 from threading import Event
 
