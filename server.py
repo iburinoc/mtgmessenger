@@ -25,10 +25,11 @@ def hook_post(args):
 		for item in data['entry']:
 			if 'messaging' not in item:
 				continue
-			uid = item['messaging']['sender']['id']
-			name = item['messaging']['message']['text']
+			for message in item['messaging']:
+				uid = message['sender']['id']
+				name = message['message']['text']
 
-			send.post(uid, name)
+				send.post(uid, name)
 
 	return '', 200
 
