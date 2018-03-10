@@ -44,7 +44,7 @@ class Sender(object):
                     'type': 'image',
                     'payload': {
                         'url': 'http://gatherer.wizards.com/Handlers/Image.ashx?' + \
-                            urllib.urlencode({'name': name, 'type': 'card'})
+                            urllib.parse.urlencode({'name': name, 'type': 'card'})
                     }
                 }
             }

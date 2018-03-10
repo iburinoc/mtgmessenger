@@ -1,3 +1,4 @@
+import os
 import sys
 
 import server
@@ -5,10 +6,11 @@ import sender
 
 def main():
     if len(sys.argv) < 2:
-        print('Pass in ACCESS_TOKEN as first parameter')
-        return
+        access_token = os.environ['ACCESS_TOKEN']
+    else:
+        access_token = sys.argv[1]
 
-    send = sender.Sender(sys.argv[1], simple=True)
+    send = sender.Sender(access_token, simple=True)
     server.send = send
 
     try:
