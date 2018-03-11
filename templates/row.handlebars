@@ -1,0 +1,13 @@
+<li id="row-{{id}}" class="list-group-item px-2">
+    <span>
+        {{name}}
+    </span>
+    <span style="float: right;">
+        {{#each cost}}
+            {{> cost val=this}}
+        {{/each}}
+        <span class="pl-1">
+        <i class="material-icons" style="vertical-align: middle;">send</i>
+        </span>
+    </span>
+</li>
