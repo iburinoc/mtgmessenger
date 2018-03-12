@@ -7,7 +7,7 @@ import sender
 app = Flask(__name__)
 send = None
 
-@app.route("/hook", methods=['GET', 'POST'])
+@app.route("/api/hook", methods=['GET', 'POST'])
 def hook():
     if request.method == 'GET':
         return hook_get(request.args)
@@ -32,6 +32,10 @@ def hook_post(args):
                 send.post(uid, name)
 
     return '', 200
+
+@app.route("/api/upload", methods=['GET'])
+def upload():
+    pass
 
 if __name__ == '__main__':
     app.run(port=12000, debug=True)

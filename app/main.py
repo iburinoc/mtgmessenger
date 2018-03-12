@@ -1,8 +1,13 @@
 import os
 import sys
 
-import server
-import sender
+from aiohttp import web
+
+import hook
+
+def add_routes(app):
+    app.router.add_get('/hook', hook.hook_get)
+    app.router.add_post('/hook', hook.hook_post)
 
 def main():
     if len(sys.argv) < 2:
@@ -10,15 +15,12 @@ def main():
     else:
         access_token = sys.argv[1]
 
-    send = sender.Sender(access_token, simple=True)
-    server.send = send
+    app = web.Application()
+    app['access_token'] = access_token
 
-    try:
-        server.app.run('0.0.0.0', port=8000)
-    except:
-        send.stop()
+    add_routes(app)
 
-        raise
+    web.run_app(app, host='0.0.0.0', port=12000)
 
 if __name__ == '__main__':
     main()
