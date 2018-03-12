@@ -1,13 +1,14 @@
-<li id="row-{{id}}" onclick="{{row_fun}}({{id}})" class="cs-card-row list-group-item px-2">
+<li id="row-{{id}}" class="cs-card-row list-group-item px-2">
     <span>
         {{name}}
     </span>
     <span style="float: right;">
         {{#each cost}}
-            {{> cost val=this}}
+            {{> cost this}}
         {{/each}}
         <span class="pl-1">
-        <i id="share-{{id}}" onclick="{{share_fun}}({{id}})" class="material-icons" style="vertical-align: middle;">send</i>
+        <i id="share-{{id}}"
+            class="cs-send material-icons" style="vertical-align: middle;">send</i>
         </span>
     </span>
 </li>
