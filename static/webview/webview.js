@@ -18,19 +18,9 @@ function share_card(idx) {
             },
         },
     };
-    function build_element(card_face) {
-        return {
-            image_url: card_face.image_uris.normal,
-            buttons: [{
-                type: 'web_url',
-                url: card.scryfall_uri,
-                title: 'Scryfall',
-            }]
-        };
-    }
     var image_uri = (card.card_faces === undefined ?
             card : card.card_faces[0])
-            .image_uris.normal;
+            .image_uris.small;
 
     // Upload attachment
     $.ajax({
