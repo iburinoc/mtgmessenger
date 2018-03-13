@@ -1,23 +1,25 @@
 var cards = [];
 
 function share_card(idx) {
-    // Upload attachment
-    $.ajax({
-        url: 'https://mtgbot.seanp.xyz/api/upload/',
-        method: 'POST',
-    });
     var card = cards[idx];
     var message = {
         attachment: {
             type: 'template',
             payload: {
-                template_type: 'generic',
+                template_type: 'media',
+                elements: [{
+                    media_type: 'image',
+                    buttons: [{
+                        type: 'web_url',
+                        url: card.scryfall_uri,
+                        title: 'Scryfall',
+                    }]
+                }],
             },
         },
     };
     function build_element(card_face) {
         return {
-            title: card_face.name,
             image_url: card_face.image_uris.normal,
             buttons: [{
                 type: 'web_url',
@@ -26,23 +28,31 @@ function share_card(idx) {
             }]
         };
     }
-    if (card.card_faces === undefined)
-        message.attachment.payload.elements = [
-            build_element(card),
-        ];
-    else
-        message.attachment.payload.elements = card
-            .card_faces
-            .map(build_element);
+    var image_uri = (card.card_faces === undefined ?
+            card : card.card_faces[0])
+            .image_uris.normal;
 
-    MessengerExtensions.beginShareFlow(
-        function(share_response) {
-            if (share_response.is_sent)
-                MessengerExtensions.requestBrowserClose();
+    var attachment_id = upload_card_image(image_uri);
+    // Upload attachment
+    $.ajax({
+        url: 'https://mtgbot.seanp.xyz/api/upload',
+        method: 'POST',
+        data: {
+            url: image_uri,
         },
-        function(errorCode, errorMessage) {},
-        message,
-        'current_thread');
+    }).done(function(resp) {
+        message.attachment.payload.elements[0].attachment_id = resp.attachment_id;
+
+        MessengerExtensions.beginShareFlow(
+            function(share_response) {
+                if (share_response.is_sent)
+                    MessengerExtensions.requestBrowserClose();
+            },
+            function(errorCode, errorMessage) {},
+            message,
+            'current_thread');
+    });
+
 }
 
 function row_click(idx) {
