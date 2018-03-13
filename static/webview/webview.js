@@ -46,8 +46,11 @@ function share_card(idx) {
 
         MessengerExtensions.beginShareFlow(
             function(share_response) {
-                if (share_response.is_sent)
-                    MessengerExtensions.requestBrowserClose();
+                if (share_response.is_sent) {
+                    MessengerExtensions.requestCloseBrowser(
+                        function(){},
+                        function(){});
+                }
             },
             function(errorCode, errorMessage) {},
             message,
