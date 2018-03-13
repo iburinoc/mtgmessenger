@@ -1,5 +1,3 @@
-import ujson
-
 from aiohttp import web
 
 import facebook
@@ -15,4 +13,4 @@ async def upload_post(request):
 
     aid = await facebook.upload_attachment(url, request.app)
 
-    return web.Response(text=ujson.dumps({'attachment_id': aid}))
+    return web.json_response({'attachment_id': aid})

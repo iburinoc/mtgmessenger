@@ -8,10 +8,14 @@ import hook
 import upload
 
 def add_routes(app):
-    app.router.add_get('/hook', hook.hook_get)
-    app.router.add_post('/hook', hook.hook_post)
+    PREFIX = '/api' if app['debug'] else ''
+    app.router.add_get(PREFIX + '/hook', hook.hook_get)
+    app.router.add_post(PREFIX + '/hook', hook.hook_post)
 
-    app.router.add_post('/upload', upload.upload_post)
+    app.router.add_post(PREFIX + '/upload', upload.upload_post)
+
+    if app['debug']:
+        app.router.add_static('/', path='../static/', name='static')
 
 def setup_client_session(app):
     async def init_session(app):
@@ -40,6 +44,7 @@ def main():
 
     app = web.Application()
     app['access_token'] = access_token
+    app['debug'] = 'DEBUG' in os.environ and os.environ['DEBUG']
 
     add_routes(app)
     setup_client_session(app)

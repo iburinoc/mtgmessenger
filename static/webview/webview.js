@@ -32,15 +32,16 @@ function share_card(idx) {
             card : card.card_faces[0])
             .image_uris.normal;
 
-    var attachment_id = upload_card_image(image_uri);
     // Upload attachment
     $.ajax({
-        url: 'https://mtgbot.seanp.xyz/api/upload',
+        url: '/api/upload',
         method: 'POST',
-        data: {
+        data: JSON.stringify({
             url: image_uri,
-        },
+        }),
+        contentType: 'application/json',
     }).done(function(resp) {
+        console.log('aid: ' + resp.attachment_id);
         message.attachment.payload.elements[0].attachment_id = resp.attachment_id;
 
         MessengerExtensions.beginShareFlow(
@@ -56,7 +57,6 @@ function share_card(idx) {
 }
 
 function row_click(idx) {
-    console.log(idx);
     return function(event) {
         $(".cs-card-row").removeClass('active');
         $("#row-" + idx).toggleClass('active');
@@ -65,8 +65,6 @@ function row_click(idx) {
 
 function share_click(idx) {
     return function(event) {
-        console.log('share ' + idx);
-
         event.stopPropagation();
 
         share_card(idx);
@@ -84,7 +82,7 @@ function build_card_row(card) {
 }
 
 function parse_manacost(cost) {
-    var regex = /{[WUBRG/0-9]*}/g;
+    var regex = /{[WUBRGXYZ/0-9]*}/g;
     var costs = cost.match(regex);
     return costs === null ? [] :
         costs.map(cost => cost
