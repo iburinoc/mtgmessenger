@@ -5,10 +5,13 @@ import sys
 from aiohttp import web, ClientSession
 
 import hook
+import upload
 
 def add_routes(app):
     app.router.add_get('/hook', hook.hook_get)
     app.router.add_post('/hook', hook.hook_post)
+
+    app.router.add_post('/upload', upload.upload_post)
 
 def setup_client_session(app):
     async def init_session(app):
