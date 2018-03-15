@@ -1,5 +1,11 @@
 var cards = [];
 
+function get_card_image(card) {
+    return (card.card_faces === undefined ||
+        card.image_uris !== undefined ?
+        card : card.card_faces[0]).image_uris.normal;
+}
+
 function share_card(idx) {
     var card = cards[idx];
     var message = {
@@ -18,19 +24,7 @@ function share_card(idx) {
             },
         },
     };
-    function build_element(card_face) {
-        return {
-            image_url: card_face.image_uris.normal,
-            buttons: [{
-                type: 'web_url',
-                url: card.scryfall_uri,
-                title: 'Scryfall',
-            }]
-        };
-    }
-    var image_uri = (card.card_faces === undefined ?
-            card : card.card_faces[0])
-            .image_uris.normal;
+    var image_uri = get_card_image(card);
 
     // Upload attachment
     $.ajax({
@@ -60,9 +54,28 @@ function share_card(idx) {
 }
 
 function row_click(idx) {
+    var rowid = '#row-'+idx;
+    var collapseid = '#collapse-'+idx;
     return function(event) {
-        $(".cs-card-row").removeClass('active');
-        $("#row-" + idx).toggleClass('active');
+        var row = $(rowid);
+        var collapse = $(collapseid);
+        var img = collapse.find('img');
+        var open = !collapse.hasClass('show');
+        //var open = !row.hasClass('active');
+
+        img.attr('src', get_card_image(cards[idx]));
+
+        $('.cs-card-collapse')
+            .not(collapseid)
+            .collapse('hide');
+
+        if (open) {
+            //row.addClass('active');
+            collapse.collapse('show');
+        } else {
+            //row.removeClass('active');
+            collapse.collapse('hide');
+        }
     }
 }
 
@@ -103,10 +116,10 @@ function parse_card(card, idx) {
         name: card.name,
         id: idx,
     };
-    var cost = (card.card_faces === undefined ?
-            card.mana_cost :
-            card.card_faces[0].mana_cost);
-    data.cost = parse_manacost(cost);
+    var front = (card.card_faces === undefined ?
+            card :
+            card.card_faces[0]);
+    data.cost = parse_manacost(front.mana_cost);
 
     return data;
 }
@@ -122,10 +135,16 @@ function update_list() {
     }
 
     cards.forEach(function(card, idx) {
-        $(build_card_row(parse_card(card, idx)))
+        var el = $(build_card_row(parse_card(card, idx)))
             .appendTo(list)
-            .click(row_click(idx))
-            .find('.cs-send').click(share_click(idx));
+            .click(row_click(idx));
+
+        el.find('.cs-send').click(share_click(idx));
+        el.find('.collapse').on('shown.bs.collapse', function (e) {
+            $('html,body').animate({
+                scrollTop: el.offset().top
+            }, 250);
+        });
     });
 }
 
@@ -135,6 +154,8 @@ function scryfall_search(query) {
         data: {
             q: query,
             include_extras: true,
+            order: 'set',
+            dir: 'desc',
         }
     }).done(function(resp) {
         cards = resp.data;
