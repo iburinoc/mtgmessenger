@@ -18,16 +18,6 @@ function share_card(idx) {
             },
         },
     };
-    function build_element(card_face) {
-        return {
-            image_url: card_face.image_uris.normal,
-            buttons: [{
-                type: 'web_url',
-                url: card.scryfall_uri,
-                title: 'Scryfall',
-            }]
-        };
-    }
     var image_uri = (card.card_faces === undefined ?
             card : card.card_faces[0])
             .image_uris.normal;
@@ -60,9 +50,27 @@ function share_card(idx) {
 }
 
 function row_click(idx) {
+    var rowid = '#row-'+idx;
+    var collapseid = '#collapse-'+idx;
     return function(event) {
-        $(".cs-card-row").removeClass('active');
-        $("#row-" + idx).toggleClass('active');
+        var row = $(rowid);
+        var collapse = $(collapseid);
+        var open = !row.hasClass('active');
+
+        $('.cs-card-row')
+            .not(rowid)
+            .removeClass('active');
+        $('.cs-card-collapse')
+            .not(collapseid)
+            .collapse('hide');
+
+        if (open) {
+            row.addClass('active');
+            collapse.collapse('show');
+        } else {
+            row.removeClass('active');
+            collapse.collapse('hide');
+        }
     }
 }
 
