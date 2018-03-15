@@ -28,6 +28,6 @@ templates['row'] = template({"1":function(container,depth0,helpers,partials,data
     + alias4(((helper = (helper = helpers.id || (depth0 != null ? depth0.id : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"id","hash":{},"data":data}) : helper)))
     + "\"\n            class=\"cs-send material-icons\" style=\"vertical-align: middle;\">send</i>\n        </span>\n    </span>\n    <div id=\"collapse-"
     + alias4(((helper = (helper = helpers.id || (depth0 != null ? depth0.id : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"id","hash":{},"data":data}) : helper)))
-    + "\" class=\"cs-card-collapse collapse\">\n        <div class=\"card card-body\">\n            HI\n        </div>\n    </div>\n</li>\n";
+    + "\" class=\"cs-card-collapse collapse\">\n            <img src=\"\" style=\"object-fit: contain; max-width: 100%;\"></img>\n    </div>\n</li>\n";
 },"usePartial":true,"useData":true});
 })();

@@ -40,10 +40,10 @@ async def send_card(uid, name, app):
 
     logging.getLogger('mtgbot').info('uid: %s, name: %s, card: %s', uid, name, card)
     if card:
-        if 'card_faces' not in card:
-            card_face = card
-        else:
+        if 'image_uris' not in card and 'card_faces' in card:
             card_face = card['card_faces'][0]
+        else:
+            card_face = card
         attachment_id = await facebook.upload_attachment(
             card_face['image_uris']['normal'], app)
 
