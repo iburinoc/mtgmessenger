@@ -98,7 +98,7 @@ function build_card_row(card) {
 }
 
 function parse_manacost(cost) {
-    var regex = /{[WUBRGXYZ/0-9]*}/g;
+    var regex = /{[WUBRGXYZC/0-9]*}/g;
     var costs = cost.match(regex);
     return costs === null ? [] :
         costs.map(cost => cost
