@@ -3,6 +3,7 @@ import logging
 import asyncio
 from aiohttp import web
 
+import attachment_cache
 import facebook
 import scryfall
 
