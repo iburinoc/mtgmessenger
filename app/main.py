@@ -1,3 +1,4 @@
+import asyncio_redis
 import logging
 import os
 import sys
@@ -17,11 +18,24 @@ def add_routes(app):
     if app['debug']:
         app.router.add_static('/', path='../static/', name='static')
 
-def setup_client_session(app):
+def setup_http_session(app):
     async def init_session(app):
-        app['client_session'] = ClientSession()
+        app['http_session'] = ClientSession(
+                loop=app.loop)
     async def close_session(app):
-        await app['client_session'].close()
+        await app['http_session'].close()
+    app.on_startup.append(init_session)
+    app.on_cleanup.append(close_session)
+
+def setup_redis_session(app):
+    async def init_session(app):
+        app['redis_session'] = await asyncio_redis.Connection.create(
+                host='localhost',
+                port=6379,
+                encoder=asyncio_redis.encoders.BytesEncoder(),
+                loop=app.loop)
+    async def close_session(app):
+        app['redis_session'].close()
     app.on_startup.append(init_session)
     app.on_cleanup.append(close_session)
 
@@ -38,16 +52,17 @@ def setup_logging(app):
 
 def main():
     if len(sys.argv) < 2:
-        access_token = os.environ['ACCESS_TOKEN']
+        fb_secret = os.environ['FB_SECRET']
     else:
-        access_token = sys.argv[1]
+        fb_secret = sys.argv[1]
 
     app = web.Application()
-    app['access_token'] = access_token
+    app['fb_secret'] = fb_secret
     app['debug'] = 'DEBUG' in os.environ and os.environ['DEBUG']
 
     add_routes(app)
-    setup_client_session(app)
+    setup_http_session(app)
+    setup_redis_session(app)
 
     setup_logging(app)
 

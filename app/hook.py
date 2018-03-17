@@ -29,7 +29,7 @@ async def hook_post(request):
     return web.Response()
 
 async def send_card(uid, name, app):
-    card = await scryfall.query_card({'fuzzy': name}, app['client_session'])
+    card = await scryfall.query_card({'fuzzy': name}, app['http_session'])
 
     message = {
         'messaging_type': 'RESPONSE',
@@ -40,12 +40,7 @@ async def send_card(uid, name, app):
 
     logging.getLogger('mtgbot').info('uid: %s, name: %s, card: %s', uid, name, card)
     if card:
-        if 'image_uris' not in card and 'card_faces' in card:
-            card_face = card['card_faces'][0]
-        else:
-            card_face = card
-        attachment_id = await facebook.upload_attachment(
-            card_face['image_uris']['normal'], app=app)
+        attachment_id = await attachment_cache.get_and_set(card, app=app)
 
         logging.getLogger('mtgbot').info('card %s, attachment id %s', name, attachment_id)
 

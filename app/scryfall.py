@@ -20,6 +20,14 @@ async def get_cards_page(page, session):
         data = await resp.json()
         return data if resp.status == 200 else None
 
+async def card_by_id(card_id, session):
+    if isinstance(card_id, bytes):
+        card_id = card_id.decode('utf-8')
+    async with session.get('{}/{}'.format(CARDS, card_id),
+            timeout=60) as resp:
+        data = await resp.json()
+        return data if resp.status == 200 else None
+
 def get_image_uri(card):
     if 'image_uris' not in card and 'card_faces' in card:
         card_face = card['card_faces'][0]
