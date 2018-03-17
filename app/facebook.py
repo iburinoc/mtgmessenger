@@ -7,8 +7,8 @@ SEND_MESSAGE='https://graph.facebook.com/v2.6/me/messages'
 
 async def upload_attachment(url, session=None, secret=None, app=None):
     if app:
-        session = app['client_session']
-        secret = app['access_token']
+        session = app['http_session']
+        secret = app['fb_secret']
     message = {
         'message': {
             'attachment': {
@@ -30,8 +30,8 @@ async def upload_attachment(url, session=None, secret=None, app=None):
 
 async def send_message(message, session=None, secret=None, app=None):
     if app:
-        session = app['client_session']
-        secret = app['access_token']
+        session = app['http_session']
+        secret = app['fb_secret']
 
     async with session.post(SEND_MESSAGE,
             params={'access_token': secret},

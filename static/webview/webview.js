@@ -24,14 +24,13 @@ function share_card(idx) {
             },
         },
     };
-    var image_uri = get_card_image(card);
 
     // Upload attachment
     $.ajax({
         url: '/api/upload',
         method: 'POST',
         data: JSON.stringify({
-            url: image_uri,
+            card_id: card['id'],
         }),
         contentType: 'application/json',
     }).done(function(resp) {
