@@ -157,7 +157,9 @@ function scryfall_search(query) {
             dir: 'desc',
         }
     }).done(function(resp) {
-        cards = resp.data;
+        cards = resp.data.sort(function(a, b) {
+            return (a.name <= b.name) ? -1 : 1;
+        });
         update_list();
     }).fail(function() {
         cards = [];
