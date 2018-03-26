@@ -97,7 +97,7 @@ function build_card_row(card) {
 }
 
 function parse_manacost(cost) {
-    var regex = /{[WUBRGXYZC/0-9]*}/g;
+    var regex = /{[WUBRGXYZCP/0-9]*}/g;
     var costs = cost.match(regex);
     return costs === null ? [] :
         costs.map(cost => cost
@@ -105,8 +105,9 @@ function parse_manacost(cost) {
                 .toLowerCase())
             .map(cost =>
                 ({
-                    cost: cost.replace('/', ''),
-                    hybrid: cost.indexOf('/') !== -1,
+                    cost: cost.replace('/', '').replace('p', ''),
+                    hybrid: cost.indexOf('/') !== -1 && cost.indexOf('p') === -1,
+                    phyrexian: cost.indexOf('/p') !== -1,
                 }));
 }
 

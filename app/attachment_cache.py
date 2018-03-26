@@ -53,9 +53,9 @@ async def get_and_set(card=None,
             card = await scryfall.card_by_id(card_id, http_session)
         # need to actually make one
         uri = scryfall.get_image_uri(card)
-        aid = facebook.upload_attachment(uri, http_session, fb_secret)
+        aid = await facebook.upload_attachment(uri, http_session, fb_secret)
 
         ver = urllib.parse.urlparse(uri).query.encode('utf-8')
-        await redis_session.set(card_id.encode('utf-8'),
+        await redis_session.set(card_id,
                 msgpack.packb((aid, ver)))
     return aid

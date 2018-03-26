@@ -2,13 +2,17 @@
   var template = Handlebars.template, templates = Handlebars.templates = Handlebars.templates || {};
 templates['cost'] = template({"1":function(container,depth0,helpers,partials,data) {
     return "ms-split";
+},"3":function(container,depth0,helpers,partials,data) {
+    return "ms-p";
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {});
 
   return "<i class=\"ms ms-"
     + container.escapeExpression(((helper = (helper = helpers.cost || (depth0 != null ? depth0.cost : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(alias1,{"name":"cost","hash":{},"data":data}) : helper)))
-    + " ms-cost ms-shadow "
+    + " ms-cost ms-shadow\n"
     + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.hybrid : depth0),{"name":"if","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "\n"
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.phyrexian : depth0),{"name":"if","hash":{},"fn":container.program(3, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "\"></i>\n";
 },"useData":true});
 templates['row'] = template({"1":function(container,depth0,helpers,partials,data) {
